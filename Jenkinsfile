@@ -1,6 +1,6 @@
 pipeline {
 
-    agent any
+    agent {label 'js-teama'}
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
