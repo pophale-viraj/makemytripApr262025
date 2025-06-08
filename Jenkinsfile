@@ -1,6 +1,6 @@
 pipeline {
 
-    agent {label 'js-teama'}
+    agent {label 'jenkins-slave-teamA'}
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
