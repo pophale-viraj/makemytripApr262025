@@ -3,7 +3,7 @@ pipeline {
     agent {label 'jenkins-slave-teamA'}
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '4', artifactNumToKeepStr: '4'))
+        buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '2'))
     }
 
     tools {
