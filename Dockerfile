@@ -16,7 +16,7 @@ COPY ./target/makemytrip-ms*.jar /usr/local/tomcat/webapps/
 # Expose the default Tomcat port
 EXPOSE 8080
 
-# Set the user to 'mbooking-ms' for security
+# Set the user to 'makemytrip-ms' for security
 USER makemytrip
 
 # Default command to run Tomcat
