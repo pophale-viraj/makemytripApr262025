@@ -38,7 +38,7 @@ pipeline {
         stage('Build & Tag Docker Image') {
             steps {
                 echo 'Building Docker Image with Tags...'
-                sh "docker build -t pophale-viraj/makemytrip-ms:latest -t makemytrip-ms:latest ."
+                sh "docker build -t pophale-viraj/makemytrip:latest -t makemytrip:latest ."
                 echo 'Docker Image Build Completed!'
             }
         }
@@ -57,7 +57,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'dockerhubCred', variable: 'dockerhubCred')]) {
                         sh 'docker login docker.io -u pophale-viraj -p ${dockerhubCred}'
                         echo 'Pushing Docker Image to Docker Hub...'
-                        sh 'docker push pophale-viraj/makemytrip-ms:latest'
+                        sh 'docker push pophale-viraj/makemytrip:latest'
                         echo 'Docker Image Pushed to Docker Hub Successfully!'
                     }
                 }
@@ -71,13 +71,13 @@ pipeline {
                          echo 'Tagging and Pushing Docker Image to ECR...'
                          sh '''
                          docker images
-                         docker tag makemytrip-ms:latest 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip-ms:latest
-                         docker push 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip-ms:latest
+                         docker tag makemytrip:latest 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip:latest
+                         docker push 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip:latest
                          '''
                          echo 'Docker Image Pushed to Amazon ECR Successfully!'
                     }
                 }
             }
-        }
+        } //Nexus upload has been skipped
 	}
 }
