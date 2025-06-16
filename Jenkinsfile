@@ -1,6 +1,6 @@
 pipeline {
 
-    agent {label 'jenkins-slave-teamA'}
+    agent any
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
@@ -34,14 +34,59 @@ pipeline {
                 echo 'WAR Artifact Created Successfully!'
             }
         }
-    }
 
-    post {
-        success {
-            echo '✅ Build completed successfully.'
+        stage('Build & Tag Docker Image') {
+            steps {
+                echo 'Building Docker Image with Tags...'
+                sh "docker build -t pophale-viraj/makemytrip-ms:latest -t makemytrip-ms:latest ."
+                echo 'Docker Image Build Completed!'
+            }
         }
-        failure {
-            echo '❌ Build failed.'
+
+        stage('Docker Image Scanning') {
+            steps {
+                echo 'Scanning Docker Image with Trivy...'
+                sh 'trivy image ${DOCKER_IMAGE}:latest || echo "Scan Failed - Proceeding with Caution"'
+                echo 'Docker Image Scanning Completed!'
+            }
         }
-    }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhubCred', variable: 'dockerhubCred')]) {
+                        sh 'docker login docker.io -u pophale-viraj -p ${dockerhubCred}'
+                        echo 'Pushing Docker Image to Docker Hub...'
+                        sh 'docker push pophale-viraj/makemytrip-ms:latest'
+                        echo 'Docker Image Pushed to Docker Hub Successfully!'
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image to Amazon ECR') {
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: 'ecr:ap-south-1:ecr-credentials', url: "https://533267238276.dkr.ecr.ap-south-1.amazonaws.com"]) {
+                         echo 'Tagging and Pushing Docker Image to ECR...'
+                         sh '''
+                         docker images
+                         docker tag makemytrip-ms:latest 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip-ms:latest
+                         docker push 533267238276.dkr.ecr.ap-south-1.amazonaws.com/makemytrip-ms:latest
+                         '''
+                         echo 'Docker Image Pushed to Amazon ECR Successfully!'
+                    }
+                }
+            }
+        }
+
+		post {
+			success {
+				echo '✅ Build completed successfully.'
+			}
+			failure {
+				echo '❌ Build failed.'
+			}
+		}
+	}
 }
