@@ -78,5 +78,13 @@ pipeline {
                 }
             }
         } //Nexus upload has been skipped
+        stage('Cleanup Docker Images') {
+            steps {
+                echo 'Cleaning up local Docker images...'
+                sh "docker rmi -f ${DOCKER_IMAGE}:latest || true"
+                sh "docker rmi -f ${ECR_REPO}:latest || true"
+                echo 'Local Docker images deleted successfully!'
+            }
+        }
 	}
 }
