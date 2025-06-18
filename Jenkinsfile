@@ -2,6 +2,9 @@ pipeline {
 
     agent any
 
+    environment {
+    DOCKER_IMAGE = 'pophaleviraj/makemytrip:latest'
+    }
     options {
         buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
     }
@@ -11,6 +14,12 @@ pipeline {
     }
 
     stages {
+        stage('Build') {
+            steps {
+            echo "Using image: ${DOCKER_IMAGE}"
+            }// Use withDockerRegistry or a shell step here
+        }
+
         stage('Code Compilation') {
             steps {
                 echo 'Starting Code Compilation...'
