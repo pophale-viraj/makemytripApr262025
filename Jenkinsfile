@@ -83,10 +83,10 @@ pipeline {
             steps {
                 script {
                      withCredentials([usernamePassword(credentialsId: 'nexuscred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                          sh 'docker login http://65.1.95.70:8085/repository/makemytrip/ -u admin -p ${PASSWORD}'
+                          sh 'docker login http://65.0.177.242:8085/repository/makemytrip/ -u admin -p ${PASSWORD}'
                           echo "Push Docker Image to Nexus : In Progress"
-                          sh 'docker tag makemytrip 65.1.95.70:8085/makemytrip:latest'
-                          sh 'docker push 65.1.95.70:8085/makemytrip'
+                          sh 'docker tag makemytrip 65.0.177.242:8085/makemytrip:latest'
+                          sh 'docker push 65.0.177.242:8085/makemytrip'
                           echo "Push Docker Image to Nexus : Completed"
                      }
                 }
