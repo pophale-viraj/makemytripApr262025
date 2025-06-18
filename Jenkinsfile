@@ -77,7 +77,21 @@ pipeline {
                     }
                 }
             }
-        } //Nexus upload has been skipped
+        }
+
+        stage('Upload Docker Image to Nexus') {
+            steps {
+                script {
+                     withCredentials([usernamePassword(credentialsId: 'nexuscred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                          sh 'docker login http://65.1.95.70:8085/repository/makemytrip/ -u admin -p ${PASSWORD}'
+                          echo "Push Docker Image to Nexus : In Progress"
+                          sh 'docker tag makemytrip 65.1.95.70:8085/makemytrip:latest'
+                          sh 'docker push 65.1.95.70:8085/makemytrip'
+                          echo "Push Docker Image to Nexus : Completed"
+                     }
+                }
+            }
+        }
         stage('Cleanup Docker Images') {
             steps {
                 echo 'Cleaning up local Docker images...'
