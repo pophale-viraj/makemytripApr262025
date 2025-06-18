@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class s400 {
+public class S400 {
     @GetMapping("/s400")
     public String getData() {return  "Have some fire crackers" ; }
 }
