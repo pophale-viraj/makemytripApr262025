@@ -2,10 +2,7 @@ pipeline {
 
     agent any
 
-    environment {
-    DOCKER_IMAGE = 'pophaleviraj/makemytrip:latest'
-    ECR_REPO = '861276077332.dkr.ecr.ap-south-1.amazonaws.com/makemytrip'
-    }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
     }
@@ -15,18 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            steps {
-            echo "Using image: ${DOCKER_IMAGE}"
-            }// Use withDockerRegistry or a shell step here
-        }
-
-        stage('Push') {
-             steps {
-             echo "Pushing to ${ECR_REPO}"
-             // Use ${ECR_REPO} here
-             }
-        }
 
         stage('Code Compilation') {
             steps {
